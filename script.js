@@ -15,7 +15,52 @@ function addReviewToPage(review) {
   `;
   reviewList.appendChild(card);
 }
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz-4yhMkO1sE4TYma5zSEiXC3BKeUL-Qmin0gaI9fguQmHybtwseedOBpfMfr2mJEvI/exec';
 
+function handleFormSubmit(formId) {
+  const form = document.getElementById(formId);
+
+  if (!form) return;
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const status = form.querySelector('.form-status');
+    status.textContent = 'Submitting...';
+
+    const formData = new FormData(form);
+    const data = {};
+
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    if (!data.permission) {
+      data.permission = 'No';
+    }
+
+    try {
+      await fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      status.textContent = 'Thank you! Your submission has been received.';
+      form.reset();
+
+    } catch (error) {
+      status.textContent = 'Something went wrong. Please try again.';
+    }
+  });
+}
+
+handleFormSubmit('subscribeForm');
+handleFormSubmit('speakingForm');
+handleFormSubmit('websiteReviewForm');
 function escapeHTML(value) {
   return value.replace(/[&<>'"]/g, char => ({
     '&': '&amp;',
