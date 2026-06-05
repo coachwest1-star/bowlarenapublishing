@@ -142,9 +142,88 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
       <i class="fab fa-x-twitter"></i>
     </a>
 
+<section id="connect" class="section form-section">
+  <div class="section-heading">
+    <p class="eyebrow">Stay Connected</p>
+    <h2>Updates, Speaking Requests, and Reviews</h2>
+    <p>Subscribe for book updates, request Adam West for a speaking event, or submit a review.</p>
+  </div>
+
+  <div class="form-grid">
+
+    <form class="site-form" id="subscribeForm">
+      <h3>Subscribe to Updates</h3>
+
+      <input type="hidden" name="formType" value="subscribe">
+
+      <label>Name</label>
+      <input type="text" name="name" required>
+
+      <label>Email</label>
+      <input type="email" name="email" required>
+
+      <label>Message</label>
+      <textarea name="message" rows="4" placeholder="Optional message"></textarea>
+
+      <button type="submit">Subscribe</button>
+      <p class="form-status"></p>
+    </form>
+
+    <form class="site-form" id="speakingForm">
+      <h3>Speaking Request</h3>
+
+      <input type="hidden" name="formType" value="speaking">
+
+      <label>Name</label>
+      <input type="text" name="name" required>
+
+      <label>Email</label>
+      <input type="email" name="email" required>
+
+      <label>Organization</label>
+      <input type="text" name="organization">
+
+      <label>Event Date</label>
+      <input type="date" name="eventDate">
+
+      <label>Location</label>
+      <input type="text" name="location">
+
+      <label>Topic / Purpose</label>
+      <input type="text" name="topic">
+
+      <label>Message</label>
+      <textarea name="message" rows="5" required></textarea>
+
+      <button type="submit">Submit Speaking Request</button>
+      <p class="form-status"></p>
+    </form>
+
+    <form class="site-form" id="websiteReviewForm">
+      <h3>Submit a Review</h3>
+
+      <input type="hidden" name="formType" value="review">
+
+      <label>Name</label>
+      <input type="text" name="name" required>
+
+      <label>Email</label>
+      <input type="email" name="email">
+
+      <label>Review</label>
+      <textarea name="review" rows="6" required></textarea>
+
+      <label class="checkbox-label">
+        <input type="checkbox" name="permission" value="Yes">
+        I give permission for this review to be shared on the website or social media.
+      </label>
+
+      <button type="submit">Submit Review</button>
+      <p class="form-status"></p>
+    </form>
+
   </div>
 </section>
-
 <footer>
   <p>© 2026 Bowl Arena Publishing. Adam West, Author. All rights reserved.</p>
 </footer>
