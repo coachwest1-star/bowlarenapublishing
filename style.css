@@ -280,7 +280,32 @@ h2 { font-size: clamp(2rem, 4vw, 3.25rem); }
   width: auto;
   margin-top: 4px;
 }
+.video-section {
+  text-align: center;
+}
 
+.shorts-video-container {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin: 30px auto;
+  aspect-ratio: 9 / 16;
+}
+
+.shorts-video-container iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+}
+
+.video-cta {
+  margin-top: 25px;
+}
+
+.video-cta h3 {
+  margin-bottom: 20px;
+}
 /* REVIEWS */
 .review-grid {
   display: grid;
