@@ -18,6 +18,105 @@
 
 <link rel="stylesheet" href="style.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+  .signed-copy-section {
+    background: #f7f4ee;
+  }
+
+  .signed-copy-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+    gap: 42px;
+    align-items: start;
+    max-width: 1100px;
+    margin: 35px auto 0;
+  }
+
+  .signed-copy-details ul {
+    padding-left: 22px;
+    line-height: 1.8;
+  }
+
+  .price-card {
+    margin: 28px 0 20px;
+    padding: 22px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 14px;
+    background: #fff;
+  }
+
+  .price-card > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 9px 0;
+  }
+
+  .price-total-row {
+    margin-top: 8px;
+    padding-top: 16px !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.14);
+    font-size: 1.08rem;
+  }
+
+  .order-note,
+  .venmo-help {
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .signed-order-form select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .address-fieldset {
+    margin: 18px 0;
+    padding: 18px;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 12px;
+  }
+
+  .address-fieldset legend {
+    padding: 0 8px;
+    font-weight: 700;
+  }
+
+  .address-row {
+    display: grid;
+    grid-template-columns: 1.5fr 0.7fr 1fr;
+    gap: 12px;
+  }
+
+  .signed-order-summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin: 18px 0;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .venmo-button {
+    display: block;
+    margin-top: 12px;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  @media (max-width: 800px) {
+    .signed-copy-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .address-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
 </head>
 
 <body>
@@ -30,6 +129,7 @@
       <a href="#author">Author</a>
       <a href="#connect">Connect</a>
       <a href="#reviews">Reviews</a>
+      <a href="#signed-copy">Signed Copies</a>
       <a class="nav-button" href="#buy">Where to Buy</a>
     </div>
   </nav>
@@ -48,6 +148,7 @@
         <a class="primary-button buy-link" href="https://www.barnesandnoble.com/w/there-are-no-piano-lessons-in-the-projects-adam-west/1150311577?ean=2940196507427" target="_blank" rel="noopener">Barnes & Noble</a>
         <a class="primary-button buy-link" href="https://www.booksamillion.com/p/9798996162505" target="_blank" rel="noopener">Books-A-Million</a>
         <a class="primary-button buy-link" href="https://www.walmart.com/ip/There-Are-No-Piano-Lessons-in-the-Projects-Paperback-9798996162505/20321811604?classType=REGULAR" target="_blank" rel="noopener">Walmart</a>
+        <a class="primary-button" href="#signed-copy">Order a Signed Copy</a>
         <a class="secondary-button" href="#connect">Stay Connected</a>
       </div>
     </div>
@@ -203,6 +304,147 @@
     </div>
   </section>
 
+
+  <section id="signed-copy" class="section signed-copy-section">
+    <div class="section-heading">
+      <p class="eyebrow">Signed by the Author</p>
+      <h2>Order a Personalized Signed Copy</h2>
+      <p>
+        Purchase a signed paperback directly from Adam West. Personalization is optional,
+        and U.S. shipping is added automatically.
+      </p>
+    </div>
+
+    <div class="signed-copy-grid">
+      <div class="signed-copy-details">
+        <h3>What is included</h3>
+        <ul>
+          <li>A new paperback copy of <em>There Are No Piano Lessons in the Projects</em></li>
+          <li>Author signature</li>
+          <li>Optional personalized inscription</li>
+          <li>Protective packaging and U.S. shipping</li>
+        </ul>
+
+        <div class="price-card">
+          <div>
+            <span>Signed paperback</span>
+            <strong>$18.99 each</strong>
+          </div>
+          <div>
+            <span>Flat-rate U.S. shipping</span>
+            <strong>$5.99</strong>
+          </div>
+          <div class="price-total-row">
+            <span>Order total</span>
+            <strong id="signedOrderTotal">$24.98</strong>
+          </div>
+        </div>
+
+        <p class="order-note">
+          After submitting the order form, complete payment through Venmo using the order
+          reference shown on the confirmation screen. Orders are not complete until payment is received.
+        </p>
+      </div>
+
+      <form class="site-form signed-order-form" id="signedOrderForm">
+        <h3>Signed Copy Order Form</h3>
+        <input type="hidden" name="formType" value="signedOrder">
+        <input type="hidden" name="bookPrice" value="18.99">
+        <input type="hidden" name="shippingCost" value="5.99">
+        <input type="hidden" name="orderTotal" id="signedOrderTotalInput" value="24.98">
+        <input type="hidden" name="orderReference" id="signedOrderReference">
+
+        <label for="signedName">Full Name</label>
+        <input id="signedName" type="text" name="name" autocomplete="name" required>
+
+        <label for="signedEmail">Email</label>
+        <input id="signedEmail" type="email" name="email" autocomplete="email" required>
+
+        <label for="signedQuantity">Quantity</label>
+        <select id="signedQuantity" name="quantity" required>
+          <option value="1">1 signed copy</option>
+          <option value="2">2 signed copies</option>
+          <option value="3">3 signed copies</option>
+          <option value="4">4 signed copies</option>
+          <option value="5">5 signed copies</option>
+        </select>
+
+        <label for="signedTo">Personalize the book to</label>
+        <input
+          id="signedTo"
+          type="text"
+          name="personalizedTo"
+          placeholder="Example: To Sarah"
+        >
+
+        <label for="signedMessage">Requested inscription</label>
+        <textarea
+          id="signedMessage"
+          name="inscription"
+          rows="4"
+          maxlength="250"
+          placeholder="Optional. Leave blank for signature only."
+        ></textarea>
+
+        <fieldset class="address-fieldset">
+          <legend>Shipping Address</legend>
+
+          <label for="shippingAddress1">Street Address</label>
+          <input id="shippingAddress1" type="text" name="address1" autocomplete="address-line1" required>
+
+          <label for="shippingAddress2">Apartment, Suite, or Unit</label>
+          <input id="shippingAddress2" type="text" name="address2" autocomplete="address-line2">
+
+          <div class="address-row">
+            <div>
+              <label for="shippingCity">City</label>
+              <input id="shippingCity" type="text" name="city" autocomplete="address-level2" required>
+            </div>
+
+            <div>
+              <label for="shippingState">State</label>
+              <input id="shippingState" type="text" name="state" maxlength="2" autocomplete="address-level1" placeholder="TN" required>
+            </div>
+
+            <div>
+              <label for="shippingZip">ZIP Code</label>
+              <input id="shippingZip" type="text" name="zip" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}(-[0-9]{4})?" required>
+            </div>
+          </div>
+        </fieldset>
+
+        <label class="checkbox-label">
+          <input type="checkbox" name="shippingConfirmation" value="Yes" required>
+          I have reviewed my shipping address and understand that payment must be completed through Venmo.
+        </label>
+
+        <div class="signed-order-summary" aria-live="polite">
+          <span>Total due through Venmo:</span>
+          <strong id="signedOrderFormTotal">$24.98</strong>
+        </div>
+
+        <button type="submit">Submit Order Details</button>
+
+        <a
+          id="venmoPaymentButton"
+          class="secondary-button venmo-button"
+          href="https://account.venmo.com/u/YOUR-VENMO-USERNAME"
+          target="_blank"
+          rel="noopener"
+        >
+          Pay with Venmo
+        </a>
+
+        <p class="venmo-help">
+          Replace <strong>YOUR-VENMO-USERNAME</strong> in the link above with your actual Venmo username before publishing.
+        </p>
+
+        <p class="form-status"></p>
+      </form>
+    </div>
+  </section>
+
+
   <section id="buy" class="section buy-section">
     <div class="section-heading">
       <p class="eyebrow">Where to Buy</p>
@@ -295,6 +537,74 @@
 <footer>
   <p>© 2026 Bowl Arena Publishing. Adam West, Author. All rights reserved.</p>
 </footer>
+
+
+<script>
+  (function () {
+    const BOOK_PRICE = 18.99;
+    const SHIPPING_COST = 5.99;
+
+    const form = document.getElementById('signedOrderForm');
+    const quantityField = document.getElementById('signedQuantity');
+    const pageTotal = document.getElementById('signedOrderTotal');
+    const formTotal = document.getElementById('signedOrderFormTotal');
+    const totalInput = document.getElementById('signedOrderTotalInput');
+    const referenceInput = document.getElementById('signedOrderReference');
+    const venmoButton = document.getElementById('venmoPaymentButton');
+
+    function makeOrderReference() {
+      const now = new Date();
+      const datePart = [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, '0'),
+        String(now.getDate()).padStart(2, '0')
+      ].join('');
+      const randomPart = Math.random().toString(36).slice(2, 7).toUpperCase();
+      return 'BOOK-' + datePart + '-' + randomPart;
+    }
+
+    function updateSignedOrderTotal() {
+      const quantity = Number(quantityField.value) || 1;
+      const total = (BOOK_PRICE * quantity) + SHIPPING_COST;
+      const formatted = '$' + total.toFixed(2);
+
+      pageTotal.textContent = formatted;
+      formTotal.textContent = formatted;
+      totalInput.value = total.toFixed(2);
+    }
+
+    referenceInput.value = makeOrderReference();
+    updateSignedOrderTotal();
+
+    quantityField.addEventListener('change', updateSignedOrderTotal);
+
+    form.addEventListener('submit', function () {
+      updateSignedOrderTotal();
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'signed_book_order_submit', {
+          event_category: 'Book Sales',
+          order_reference: referenceInput.value,
+          quantity: Number(quantityField.value),
+          value: Number(totalInput.value),
+          currency: 'USD'
+        });
+      }
+    });
+
+    venmoButton.addEventListener('click', function () {
+      if (typeof gtag === 'function') {
+        gtag('event', 'venmo_payment_click', {
+          event_category: 'Book Sales',
+          order_reference: referenceInput.value,
+          value: Number(totalInput.value),
+          currency: 'USD'
+        });
+      }
+    });
+  })();
+</script>
+
 
 <script src="script.js"></script>
 
