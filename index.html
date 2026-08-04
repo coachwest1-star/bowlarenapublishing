@@ -117,6 +117,106 @@
   }
 </style>
 
+
+<style>
+  #signed-copy,
+  #signed-copy .section-heading,
+  #signed-copy .signed-copy-details {
+    color: #29231f !important;
+  }
+
+  #signed-copy .eyebrow {
+    color: #8b5e3c !important;
+  }
+
+  #signed-copy h2,
+  #signed-copy h3,
+  #signed-copy p,
+  #signed-copy li,
+  #signed-copy span,
+  #signed-copy strong {
+    color: #29231f;
+  }
+
+  #signed-copy .section-heading h2 {
+    color: #29231f !important;
+    text-shadow: none !important;
+  }
+
+  #signed-copy .section-heading > p:last-child {
+    color: #66574d !important;
+  }
+
+  #signed-copy .signed-copy-details {
+    background: #ffffff;
+    border: 1px solid rgba(43, 33, 27, 0.12);
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 16px 40px rgba(43, 33, 27, 0.08);
+  }
+
+  #signed-copy .signed-copy-details li {
+    color: #40362f !important;
+  }
+
+  #signed-copy .price-card {
+    background: #f8f3eb;
+    border-color: rgba(43, 33, 27, 0.15);
+  }
+
+  #signed-copy .price-card span,
+  #signed-copy .price-card strong {
+    color: #29231f !important;
+  }
+
+  #signed-copy .price-total-row strong {
+    font-size: 1.45rem;
+    color: #8b3f25 !important;
+  }
+
+  #signed-copy .order-note {
+    color: #66574d !important;
+  }
+
+  #signed-copy .site-form {
+    color: #29231f;
+  }
+
+  #signed-copy .venmo-button {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px 18px;
+    border: 0;
+    border-radius: 9px;
+    background: #008cff;
+    color: #ffffff !important;
+    font-weight: 800;
+  }
+
+  #signed-copy .venmo-button[hidden] {
+    display: none !important;
+  }
+
+  #signedOrderConfirmation {
+    display: none;
+    margin-top: 18px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #eef8f0;
+    border: 1px solid #b7d9bd;
+    color: #214d2b;
+  }
+
+  #signedOrderConfirmation.show {
+    display: block;
+  }
+
+  #signedOrderConfirmation strong,
+  #signedOrderConfirmation p {
+    color: #214d2b !important;
+  }
+</style>
+
 </head>
 
 <body>
@@ -428,16 +528,15 @@
         <a
           id="venmoPaymentButton"
           class="secondary-button venmo-button"
-          href="https://account.venmo.com/u/Adam-West-91"
+          href="#"
           target="_blank"
           rel="noopener"
+          hidden
         >
           Pay with Venmo
         </a>
 
-        <p class="venmo-help">
-          <strong>Venmo Username: Adam-West-91</strong>.
-        </p>
+        <div id="signedOrderConfirmation" aria-live="polite"></div>
 
         <p class="form-status"></p>
       </form>
@@ -541,6 +640,7 @@
 
 <script>
   (function () {
+    const FORM_ENDPOINT = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
     const BOOK_PRICE = 18.99;
     const SHIPPING_COST = 5.99;
 
@@ -551,17 +651,9 @@
     const totalInput = document.getElementById('signedOrderTotalInput');
     const referenceInput = document.getElementById('signedOrderReference');
     const venmoButton = document.getElementById('venmoPaymentButton');
-
-    function makeOrderReference() {
-      const now = new Date();
-      const datePart = [
-        now.getFullYear(),
-        String(now.getMonth() + 1).padStart(2, '0'),
-        String(now.getDate()).padStart(2, '0')
-      ].join('');
-      const randomPart = Math.random().toString(36).slice(2, 7).toUpperCase();
-      return 'BOOK-' + datePart + '-' + randomPart;
-    }
+    const confirmation = document.getElementById('signedOrderConfirmation');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const status = form.querySelector('.form-status');
 
     function updateSignedOrderTotal() {
       const quantity = Number(quantityField.value) || 1;
@@ -573,22 +665,80 @@
       totalInput.value = total.toFixed(2);
     }
 
-    referenceInput.value = makeOrderReference();
-    updateSignedOrderTotal();
+    function formToObject(formElement) {
+      const data = {};
+      new FormData(formElement).forEach(function (value, key) {
+        data[key] = value;
+      });
+      return data;
+    }
 
+    updateSignedOrderTotal();
     quantityField.addEventListener('change', updateSignedOrderTotal);
 
-    form.addEventListener('submit', function () {
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
       updateSignedOrderTotal();
 
-      if (typeof gtag === 'function') {
-        gtag('event', 'signed_book_order_submit', {
-          event_category: 'Book Sales',
-          order_reference: referenceInput.value,
-          quantity: Number(quantityField.value),
-          value: Number(totalInput.value),
-          currency: 'USD'
+      if (FORM_ENDPOINT.indexOf('PASTE_YOUR_') === 0) {
+        status.textContent = 'The Apps Script web-app URL must be added before orders can be submitted.';
+        status.style.color = '#a32626';
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = 'Submitting Order…';
+      status.textContent = '';
+      confirmation.classList.remove('show');
+      venmoButton.hidden = true;
+
+      try {
+        const response = await fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(formToObject(form))
         });
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.message || 'The order could not be submitted.');
+        }
+
+        referenceInput.value = result.orderReference;
+        confirmation.innerHTML =
+          '<strong>Order received!</strong>' +
+          '<p>Your order reference is <strong>' + result.orderReference + '</strong>.</p>' +
+          '<p>Total due: <strong>$' + result.total + '</strong>. Include the order reference in your Venmo payment note.</p>';
+
+        confirmation.classList.add('show');
+        venmoButton.href = result.venmoUrl;
+        venmoButton.textContent = 'Pay $' + result.total + ' with Venmo';
+        venmoButton.hidden = false;
+
+        status.textContent = 'A confirmation email has been sent to you.';
+        status.style.color = '#214d2b';
+
+        if (typeof gtag === 'function') {
+          gtag('event', 'signed_book_order_submit', {
+            event_category: 'Book Sales',
+            order_reference: result.orderReference,
+            quantity: Number(quantityField.value),
+            value: Number(result.total),
+            currency: 'USD'
+          });
+        }
+
+        confirmation.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      } catch (error) {
+        status.textContent = error.message || 'Something went wrong. Please try again.';
+        status.style.color = '#a32626';
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit Order Details';
       }
     });
 
